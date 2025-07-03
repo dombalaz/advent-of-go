@@ -90,7 +90,7 @@ func (kp *Keypad) moveRight() {
 }
 
 func prepareInput2(in string) []string {
-	return strings.Split(strings.TrimSpace(in), "\n")
+	return strings.Split(in, "\n")
 }
 
 func Solve2(in string) (string, string) {

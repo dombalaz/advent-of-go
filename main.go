@@ -3,24 +3,33 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
+	"strings"
 
 	"github.com/dombalaz/advent-of-go/y2016"
 )
 
 func main() {
-	if len(os.Args) != 2 {
+	if len(os.Args) != 3 {
 		fmt.Println("invalid number of arguments")
 		os.Exit(1)
 	}
-	filename := os.Args[1]
+	day, _ := strconv.Atoi(os.Args[1])
+	filename := os.Args[2]
 	bytes, err := os.ReadFile(filename)
 	if err != nil {
 		fmt.Printf("failed to read from file: %v", err)
 		os.Exit(1)
 	}
 
-	s := string(bytes)
+	s := strings.TrimSpace(string(bytes))
 
-	r1, r2 := y2016.Solve2(s)
-	fmt.Printf("result: %v, %v", r1, r2)
+	solver := y2016.CreateSolver(y2016.Day(day))
+	if solver == nil {
+		fmt.Printf("failed to create a solver for day: %v", day)
+		os.Exit(1)
+	}
+
+	r1, r2 := solver(s)
+	fmt.Printf("results: %v, %v", r1, r2)
 }

@@ -96,10 +96,10 @@ func newGridWalk() gridWalk {
 }
 
 func prepareInput(in string) []string {
-	return strings.Split(strings.TrimSpace(in), ", ")
+	return strings.Split(in, ", ")
 }
 
-func Solve(in string) (int, int) {
+func Solve(in string) (string, string) {
 	walkDirections := prepareInput(in)
 	gw := newGridWalk()
 
@@ -109,5 +109,7 @@ func Solve(in string) (int, int) {
 		gw.walk(c)
 	}
 
-	return gw.distance(), gw.secondVisitDistance
+	r1 := strconv.FormatInt(int64(gw.distance()), 10)
+	r2 := strconv.FormatInt(int64(gw.secondVisitDistance), 10)
+	return r1, r2
 }

@@ -35,8 +35,8 @@ func TestAbsPositive(t *testing.T) {
 func TestGridDistance(t *testing.T) {
 	cases := []struct {
 		in string
-		w  int
-	}{{in: "R2, L3", w: 5}, {in: "R2, R2, R2", w: 2}, {in: "R5, L5, R5, R3", w: 12}}
+		w  string
+	}{{in: "R2, L3", w: "5"}, {in: "R2, R2, R2", w: "2"}, {in: "R5, L5, R5, R3", w: "12"}}
 
 	for _, v := range cases {
 		d, _ := y2016.Solve(v.in)
@@ -49,7 +49,7 @@ func TestGridDistance(t *testing.T) {
 func TestTwiceVisitDistance(t *testing.T) {
 	in := "R8, R4, R4, R8"
 	_, d := y2016.Solve(in)
-	w := 4
+	w := "4"
 	if d != w {
 		t.Errorf("Solve(%v) = (_, %v), want %v", in, d, w)
 	}
