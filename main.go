@@ -21,6 +21,6 @@ func main() {
 
 	s := string(bytes)
 
-	r1, r2 := y2016.Solve(s)
+	r1, r2 := y2016.Solve2(s)
 	fmt.Printf("result: %v, %v", r1, r2)
 }
