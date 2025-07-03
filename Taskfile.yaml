@@ -4,4 +4,16 @@ tasks:
   default:
   build:
     cmds:
+      - go vet ./...
       - go build -o build/ ./main.go
+  test:
+    cmds:
+      - go test ./...
+  test:coverage:
+    cmds:
+      - go test -coverprofile="build/cover.out" ./...
+  coverage:
+    depends:
+      test:coverage
+    cmds:
+      - go tool cover -html="build/cover.out"
