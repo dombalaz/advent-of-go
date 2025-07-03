@@ -10,6 +10,7 @@ type Solver interface {
 const (
 	Day01 = iota + 1
 	Day02
+	Day03
 )
 
 func CreateSolver(day Day) Solver {
@@ -18,6 +19,8 @@ func CreateSolver(day Day) Solver {
 		return &Solver01{}
 	case Day02:
 		return &Solver02{}
+	case Day03:
+		return &Solver03{}
 	}
 	return nil
 }
