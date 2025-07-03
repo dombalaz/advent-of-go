@@ -2,7 +2,14 @@ version: '3'
 
 tasks:
   default:
+  clean:
+    cmds:
+      - rm -r build
+  createbuild:
+    cmds:
+      - mkdir -p build
   build:
+    deps: [createbuild]
     cmds:
       - go vet ./...
       - go build -o build/ ./main.go
@@ -10,10 +17,14 @@ tasks:
     cmds:
       - go test ./...
   test:coverage:
+    deps: [createbuild]
     cmds:
       - go test -coverprofile="build/cover.out" ./...
   coverage:
-    depends:
-      test:coverage
+    deps: [test:coverage]
+    cmds:
+      - go tool cover -html="build/cover.out" -o "build/cover.html"
+  coverage:show:
+    deps: [test:coverage]
     cmds:
       - go tool cover -html="build/cover.out"
