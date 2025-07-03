@@ -15,7 +15,7 @@ const (
 	directionLeft
 )
 
-func abs(x int) int {
+func Abs(x int) int {
 	mask := x >> 31
 	return (x ^ mask) - mask
 }
@@ -68,7 +68,7 @@ func (gw *gridWalk) walk(c int) {
 }
 
 func (gw *gridWalk) distance() int {
-	return abs(gw.l.x) + abs(gw.l.y)
+	return Abs(gw.l.x) + Abs(gw.l.y)
 }
 
 func (gw *gridWalk) saveLocation() {
