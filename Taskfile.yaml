@@ -1,0 +1,7 @@
+version: '3'
+
+tasks:
+  default:
+  build:
+    cmds:
+      - go build -o build/ ./main.go

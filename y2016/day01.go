@@ -1,0 +1,113 @@
+package y2016
+
+import (
+	"strconv"
+	"strings"
+)
+
+type Direction int
+
+const (
+	// Don't change the order.
+	directionUp = iota
+	directionRight
+	directionDown
+	directionLeft
+)
+
+func abs(x int) int {
+	mask := x >> 31
+	return (x ^ mask) - mask
+}
+
+type location struct {
+	x int
+	y int
+}
+
+type gridWalk struct {
+	l                   location
+	d                   Direction
+	visited             map[location]struct{}
+	secondVisitDistance int
+}
+
+func (gw *gridWalk) turn(where byte) {
+	if where == 'R' {
+		gw.d += 1
+	} else {
+		gw.d += directionLeft
+	}
+	gw.d %= directionLeft + 1
+}
+
+func (gw *gridWalk) walk(c int) {
+	var walkF func(gw *gridWalk)
+	switch gw.d {
+	case directionUp:
+		walkF = func(gw *gridWalk) {
+			gw.l.y += 1
+		}
+	case directionRight:
+		walkF = func(gw *gridWalk) {
+			gw.l.x += 1
+		}
+	case directionDown:
+		walkF = func(gw *gridWalk) {
+			gw.l.y -= 1
+		}
+	case directionLeft:
+		walkF = func(gw *gridWalk) {
+			gw.l.x -= 1
+		}
+	}
+	for range c {
+		walkF(gw)
+		gw.checkPosition()
+	}
+}
+
+func (gw *gridWalk) distance() int {
+	return abs(gw.l.x) + abs(gw.l.y)
+}
+
+func (gw *gridWalk) saveLocation() {
+	gw.visited[location{x: gw.l.x, y: gw.l.y}] = struct{}{}
+}
+
+func (gw *gridWalk) checkPosition() {
+	if gw.secondVisitDistance != 0 {
+		return
+	}
+	if _, ok := gw.visited[location{x: gw.l.x, y: gw.l.y}]; ok {
+		gw.secondVisitDistance = gw.distance()
+	} else {
+		gw.saveLocation()
+	}
+}
+
+func newGridWalk() gridWalk {
+	return gridWalk{
+		l:                   location{x: 0, y: 0},
+		d:                   directionUp,
+		visited:             make(map[location]struct{}),
+		secondVisitDistance: 0,
+	}
+}
+
+func prepareInput(in string) []string {
+	return strings.Split(strings.TrimSpace(in), ", ")
+}
+
+func Solve(in string) (int, int) {
+	walkDirections := prepareInput(in)
+	gw := newGridWalk()
+
+	for _, v := range walkDirections {
+		c, _ := strconv.Atoi(v[1:])
+		gw.turn(v[0])
+		gw.walk(c)
+	}
+
+	return gw.distance(), gw.secondVisitDistance
+}

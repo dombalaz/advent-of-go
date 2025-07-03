@@ -1,0 +1,4 @@
+# output of build
+build/
+# puzzle inputs
+inputs/*.txt
