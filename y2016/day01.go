@@ -99,7 +99,9 @@ func prepareInput(in string) []string {
 	return strings.Split(in, ", ")
 }
 
-func Solve(in string) (string, string) {
+type Solver01 struct{}
+
+func (s *Solver01) solve(in string) (string, string) {
 	walkDirections := prepareInput(in)
 	gw := newGridWalk()
 
@@ -112,4 +114,14 @@ func Solve(in string) (string, string) {
 	r1 := strconv.FormatInt(int64(gw.distance()), 10)
 	r2 := strconv.FormatInt(int64(gw.secondVisitDistance), 10)
 	return r1, r2
+}
+
+func (s *Solver01) SolveP1(in string) string {
+	r, _ := s.solve(in)
+	return r
+}
+
+func (s *Solver01) SolveP2(in string) string {
+	_, r := s.solve(in)
+	return r
 }

@@ -40,9 +40,9 @@ func TestGridDistance(t *testing.T) {
 
 	solver := y2016.CreateSolver(y2016.Day01)
 	for _, v := range cases {
-		d, _ := solver(v.in)
+		d := solver.SolveP1(v.in)
 		if d != v.w {
-			t.Errorf("Solve(%v) = (%v, _), want %v", v.in, d, v.w)
+			t.Errorf("solver.SolveP1(%v) = %v, want %v", v.in, d, v.w)
 		}
 	}
 }
@@ -50,9 +50,9 @@ func TestGridDistance(t *testing.T) {
 func TestTwiceVisitDistance(t *testing.T) {
 	in := "R8, R4, R4, R8"
 	solver := y2016.CreateSolver(y2016.Day01)
-	_, d := solver(in)
+	d := solver.SolveP2(in)
 	w := "4"
 	if d != w {
-		t.Errorf("Solve(%v) = (_, %v), want %v", in, d, w)
+		t.Errorf("solver.SolveP2(%v) = %v, want %v", in, d, w)
 	}
 }

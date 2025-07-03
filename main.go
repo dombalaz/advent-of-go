@@ -30,6 +30,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	r1, r2 := solver(s)
+	r1 := solver.SolveP1(s)
+	r2 := solver.SolveP2(s)
 	fmt.Printf("results: %v, %v", r1, r2)
 }

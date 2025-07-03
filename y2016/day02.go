@@ -93,22 +93,29 @@ func prepareInput2(in string) []string {
 	return strings.Split(in, "\n")
 }
 
-func Solve2(in string) (string, string) {
+type Solver02 struct{}
+
+func (s *Solver02) SolveP1(in string) string {
 	directions := prepareInput2(in)
-	var r1, r2 string
+	var r string
 	kp := NewKeypad()
 	for _, line := range directions {
 		for _, v := range line {
 			kp.move(v)
 		}
-		r1 += string(kp.m.At(kp.cx, kp.cy))
+		r += string(kp.m.At(kp.cx, kp.cy))
 	}
-	kp = NewHexKeypad()
+	return r
+}
+func (s *Solver02) SolveP2(in string) string {
+	directions := prepareInput2(in)
+	var r string
+	kp := NewHexKeypad()
 	for _, line := range directions {
 		for _, v := range line {
 			kp.move(v)
 		}
-		r2 += string(kp.m.At(kp.cx, kp.cy))
+		r += string(kp.m.At(kp.cx, kp.cy))
 	}
-	return r1, r2
+	return r
 }
