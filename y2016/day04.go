@@ -2,7 +2,6 @@ package y2016
 
 import (
 	"bytes"
-	"fmt"
 	"slices"
 	"strconv"
 	"strings"
@@ -41,7 +40,6 @@ func (s *Solver04) SolveP2(in string) string {
 		var buf bytes.Buffer
 		writer, _ := caesar.NewWriter(&buf, r.id)
 		writer.Write([]byte(r.letters))
-		fmt.Println(buf.String())
 		if strings.HasPrefix(buf.String(), "north") {
 			res = strconv.FormatInt(int64(r.id), 10)
 			break
