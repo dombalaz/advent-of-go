@@ -1,9 +1,13 @@
 package y2016
 
 import (
+	"bytes"
+	"fmt"
 	"slices"
 	"strconv"
 	"strings"
+
+	"github.com/dombalaz/advent-of-go/cipher/caesar"
 )
 
 type Solver04 struct{}
@@ -31,22 +35,14 @@ func (s *Solver04) SolveP1(in string) string {
 
 func (s *Solver04) SolveP2(in string) string {
 	l := strings.Split(in, "\n")
-	var sum int
 	res := ""
 	for _, v := range l {
 		r := parseRoom(v)
-		var chars []rune
-		str := r.letters
-		for range 5 {
-			char := mostFreqRune(r.letters)
-			str = removeRune(str, char)
-			chars = append(chars, char)
-		}
-		if r.checksum == string(chars) {
-			sum += r.id
-		}
-		str = string(CaesarCipherShift([]byte(r.letters), r.id))
-		if strings.HasPrefix(str, "north") {
+		var buf bytes.Buffer
+		writer, _ := caesar.NewWriter(&buf, r.id)
+		writer.Write([]byte(r.letters))
+		fmt.Println(buf.String())
+		if strings.HasPrefix(buf.String(), "north") {
 			res = strconv.FormatInt(int64(r.id), 10)
 			break
 		}
@@ -100,22 +96,4 @@ func mostFreqRune(s string) rune {
 
 func removeRune(s string, r rune) string {
 	return strings.Join(strings.Split(s, string(r)), "")
-}
-
-func CaesarCipherShift(s []byte, c int) []byte {
-	c = c % 26
-	var r byte
-	for i := range s {
-		if s[i] < 'a' || 'z' < s[i] {
-			continue
-		}
-
-		r = byte(int(s[i]) + c)
-		if 'z' < r {
-			r = byte(int(r) - 'z' + 'a' - 1)
-		}
-
-		s[i] = r
-	}
-	return s
 }

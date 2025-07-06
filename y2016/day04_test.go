@@ -36,3 +36,13 @@ func TestRealRooms(t *testing.T) {
 		t.Errorf("solver.SolveP1(%v) = '%v', want '%v'", in, r, w)
 	}
 }
+
+func TestNorthPoleObjectStorage(t *testing.T) {
+	in := "ghkma-7[aghkm]"
+	solver := y2016.CreateSolver(y2016.Day04)
+	r := solver.SolveP2(in)
+	w := "7"
+	if r != w {
+		t.Errorf("solver.SolveP2(%v) = '%v', want '%v'", in, r, w)
+	}
+}
