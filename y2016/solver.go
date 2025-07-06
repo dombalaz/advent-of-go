@@ -11,6 +11,7 @@ const (
 	Day01 = iota + 1
 	Day02
 	Day03
+	Day04
 )
 
 func CreateSolver(day Day) Solver {
@@ -21,6 +22,8 @@ func CreateSolver(day Day) Solver {
 		return &Solver02{}
 	case Day03:
 		return &Solver03{}
+	case Day04:
+		return &Solver04{}
 	}
 	return nil
 }
