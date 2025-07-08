@@ -13,6 +13,7 @@ const (
 	Day03
 	Day04
 	Day05
+	Day06
 )
 
 func CreateSolver(day Day) Solver {
@@ -27,6 +28,8 @@ func CreateSolver(day Day) Solver {
 		return &Solver04{}
 	case Day05:
 		return &Solver05{}
+	case Day06:
+		return &Solver06{}
 	}
 	return nil
 }
