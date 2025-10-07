@@ -2,45 +2,30 @@ package y2016
 
 import (
 	"strings"
+
+	"github.com/dombalaz/advent-of-go/grid"
 )
 
-type Matrix[T any] struct {
-	x, y int
-	data []T
-}
-
-func NewMatrix[T any](x, y int) Matrix[T] {
-	return Matrix[T]{x, y, make([]T, x*y)}
-}
-
-func (m *Matrix[T]) Fill(vs []T) {
-	copy(m.data, vs)
-}
-
-func (m *Matrix[T]) At(x, y int) T {
-	return m.data[y*m.x+x]
-}
-
 type Keypad struct {
-	m      Matrix[rune]
+	g      grid.Grid[rune]
 	cx, cy int
 }
 
 func NewKeypad() Keypad {
-	m := NewMatrix[rune](3, 3)
+	m := grid.New[rune](3, 3)
 	m.Fill([]rune{'1', '2', '3', '4', '5', '6', '7', '8', '9'})
 	return Keypad{
-		m:  m,
+		g:  m,
 		cx: 1,
 		cy: 1,
 	}
 }
 
 func NewHexKeypad() Keypad {
-	m := NewMatrix[rune](5, 5)
+	m := grid.New[rune](5, 5)
 	m.Fill([]rune{' ', ' ', '1', ' ', ' ', ' ', '2', '3', '4', ' ', '5', '6', '7', '8', '9', ' ', 'A', 'B', 'C', ' ', ' ', ' ', 'D', ' ', ' '})
 	return Keypad{
-		m:  m,
+		g:  m,
 		cx: 0,
 		cy: 2,
 	}
@@ -60,28 +45,28 @@ func (kp *Keypad) move(i rune) {
 }
 
 func (kp *Keypad) moveUp() {
-	if kp.cy == 0 || kp.m.At(kp.cx, kp.cy-1) == ' ' {
+	if kp.cy == 0 || kp.g.At(kp.cx, kp.cy-1) == ' ' {
 		return
 	}
 	kp.cy -= 1
 }
 
 func (kp *Keypad) moveLeft() {
-	if kp.cx == 0 || kp.m.At(kp.cx-1, kp.cy) == ' ' {
+	if kp.cx == 0 || kp.g.At(kp.cx-1, kp.cy) == ' ' {
 		return
 	}
 	kp.cx -= 1
 }
 
 func (kp *Keypad) moveDown() {
-	if kp.cy+1 == kp.m.y || kp.m.At(kp.cx, kp.cy+1) == ' ' {
+	if kp.cy+1 == kp.g.Y() || kp.g.At(kp.cx, kp.cy+1) == ' ' {
 		return
 	}
 	kp.cy += 1
 }
 
 func (kp *Keypad) moveRight() {
-	if kp.cx+1 == kp.m.x || kp.m.At(kp.cx+1, kp.cy) == ' ' {
+	if kp.cx+1 == kp.g.X() || kp.g.At(kp.cx+1, kp.cy) == ' ' {
 		return
 	}
 	kp.cx += 1
@@ -101,7 +86,7 @@ func (s *Solver02) SolveP1(in string) string {
 		for _, v := range line {
 			kp.move(v)
 		}
-		r += string(kp.m.At(kp.cx, kp.cy))
+		r += string(kp.g.At(kp.cx, kp.cy))
 	}
 	return r
 }
@@ -113,7 +98,7 @@ func (s *Solver02) SolveP2(in string) string {
 		for _, v := range line {
 			kp.move(v)
 		}
-		r += string(kp.m.At(kp.cx, kp.cy))
+		r += string(kp.g.At(kp.cx, kp.cy))
 	}
 	return r
 }
