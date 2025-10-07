@@ -41,7 +41,7 @@ func (s *Solver05) SolveP2(in string) string {
 			continue
 		}
 		r[pos] = rune(str[6])
-		if strings.IndexRune(string(r), 0) == -1 {
+		if !strings.ContainsRune(string(r), 0) {
 			return string(r)
 		}
 	}

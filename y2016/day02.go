@@ -14,9 +14,7 @@ func NewMatrix[T any](x, y int) Matrix[T] {
 }
 
 func (m *Matrix[T]) Fill(vs []T) {
-	for i, v := range vs {
-		m.data[i] = v
-	}
+	copy(m.data, vs)
 }
 
 func (m *Matrix[T]) At(x, y int) T {
