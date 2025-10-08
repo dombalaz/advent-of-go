@@ -21,6 +21,24 @@ func TestNew(t *testing.T) {
 	}
 }
 
+func TestNewFromSlice(t *testing.T) {
+	x := 3
+	y := 3
+	vals := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
+	g := grid.NewFromSlice(x, y, vals)
+	vI := 0
+	for i := range y {
+		for j := range x {
+			at := g.At(j, i)
+			w := vals[vI]
+			if at != w {
+				t.Errorf("vals[%v] = %v, want %v", vI, at, w)
+			}
+			vI++
+		}
+	}
+}
+
 func TestDimensions(t *testing.T) {
 	x := 2
 	y := 3
@@ -58,6 +76,38 @@ func TestFill(t *testing.T) {
 	}
 	for _, test := range tests {
 		at := g.At(test.x, test.y)
+		if at != test.w {
+			t.Errorf("g.At(%v, %v) = %v, want %v", test.x, test.y, at, test.w)
+		}
+	}
+}
+
+func TestSet(t *testing.T) {
+	x := 2
+	y := 3
+	g := grid.New[int](x, y)
+
+	tests := []struct {
+		x int
+		y int
+		w int
+	}{
+		{x: 0, y: 0, w: 1},
+		{x: 1, y: 0, w: 2},
+		{x: 0, y: 1, w: 3},
+		{x: 1, y: 1, w: 4},
+		{x: 0, y: 2, w: 5},
+		{x: 1, y: 2, w: 0},
+	}
+	for _, test := range tests {
+		at := g.At(test.x, test.y)
+		if at != 0 {
+			t.Errorf("g.At(%v, %v) = %v, want %v", test.x, test.y, at, 0)
+		}
+
+		g.Set(test.x, test.y, test.w)
+		at = g.At(test.x, test.y)
+
 		if at != test.w {
 			t.Errorf("g.At(%v, %v) = %v, want %v", test.x, test.y, at, test.w)
 		}

@@ -32,5 +32,9 @@ func main() {
 
 	r1 := solver.SolveP1(s)
 	r2 := solver.SolveP2(s)
-	fmt.Printf("results: %v, %v", r1, r2)
+	fmt.Println("========== p1 ==========")
+	fmt.Println(r1)
+	fmt.Println("========== p2 ==========")
+	fmt.Println(r2)
+	fmt.Println("========================")
 }
