@@ -1,6 +1,9 @@
 package y2016
 
 import (
+	"bufio"
+	"io"
+	"log"
 	"strconv"
 	"strings"
 )
@@ -100,6 +103,41 @@ func prepareInput(in string) []string {
 }
 
 type Solver01 struct{}
+
+func (s *Solver01) read(r io.Reader, ch chan<- string) {
+	defer close(ch)
+	reader := bufio.NewReader(r)
+	rf := func() (string, error) { return reader.ReadString(',') }
+	check := func(t string, err error) bool {
+		return err == nil || (err == io.EOF && len(t) > 0)
+	}
+
+	for token, err := rf(); check(token, err); token, err = rf() {
+		ch <- strings.Trim(token, ", \n")
+	}
+}
+
+func (s *Solver01) _solve(ch <-chan string) (string, string) {
+	gw := newGridWalk()
+
+	for v := range ch {
+		c, err := strconv.Atoi(v[1:])
+		log.Printf("Processing %v:%v:%v\n", v, v[1:], err)
+		gw.turn(v[0])
+		gw.walk(c)
+	}
+
+	r1 := strconv.FormatInt(int64(gw.distance()), 10)
+	r2 := strconv.FormatInt(int64(gw.secondVisitDistance), 10)
+	return r1, r2
+}
+
+func (s *Solver01) SolveP1R(reader io.Reader) (string, error) {
+	ch := make(chan string)
+	go s.read(reader, ch)
+	r, _ := s._solve(ch)
+	return r, nil
+}
 
 func (s *Solver01) solve(in string) (string, string) {
 	walkDirections := prepareInput(in)
