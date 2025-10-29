@@ -1,8 +1,9 @@
 package y2016
 
 import (
+	"context"
+	"io"
 	"strconv"
-	"strings"
 )
 
 type Direction int
@@ -95,17 +96,12 @@ func newGridWalk() gridWalk {
 	}
 }
 
-func prepareInput(in string) []string {
-	return strings.Split(in, ", ")
-}
-
 type Solver01 struct{}
 
-func (s *Solver01) solve(in string) (string, string) {
-	walkDirections := prepareInput(in)
+func (s *Solver01) solve(ch <-chan string) (string, string) {
 	gw := newGridWalk()
 
-	for _, v := range walkDirections {
+	for v := range ch {
 		c, _ := strconv.Atoi(v[1:])
 		gw.turn(v[0])
 		gw.walk(c)
@@ -116,12 +112,16 @@ func (s *Solver01) solve(in string) (string, string) {
 	return r1, r2
 }
 
-func (s *Solver01) SolveP1(in string) string {
-	r, _ := s.solve(in)
-	return r
+func (s *Solver01) SolveP1(ctx context.Context, r io.Reader) (string, error) {
+	ch := make(chan string)
+	go scan(r, ch, scanCSV)
+	result, _ := s.solve(ch)
+	return result, nil
 }
 
-func (s *Solver01) SolveP2(in string) string {
-	_, r := s.solve(in)
-	return r
+func (s *Solver01) SolveP2(ctx context.Context, r io.Reader) (string, error) {
+	ch := make(chan string)
+	go scan(r, ch, scanCSV)
+	_, result := s.solve(ch)
+	return result, nil
 }

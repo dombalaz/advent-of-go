@@ -1,7 +1,9 @@
 package y2016
 
 import (
-	"fmt"
+	"bufio"
+	"context"
+	"io"
 	"strconv"
 	"strings"
 )
@@ -15,9 +17,9 @@ func isValidTriangle(a, b, c int) bool {
 
 type Solver03 struct{}
 
-func countTriangles(in []string) int {
+func countTriangles(ch <-chan string) int {
 	valid := 0
-	for _, v := range in {
+	for v := range ch {
 		sides := strings.Fields(v)
 
 		a, _ := strconv.Atoi(sides[0])
@@ -31,29 +33,40 @@ func countTriangles(in []string) int {
 	return valid
 }
 
-func (s *Solver03) SolveP1(in string) string {
-	triangles := strings.Split(in, "\n")
-	return strconv.FormatInt(int64(countTriangles(triangles)), 10)
+func (s *Solver03) SolveP1(ctx context.Context, r io.Reader) (string, error) {
+	ch := make(chan string)
+	go scan(r, ch, bufio.ScanLines)
+	return strconv.FormatInt(int64(countTriangles(ch)), 10), nil
 }
 
-func (s *Solver03) SolveP2(in string) string {
-	triangles := strings.Split(in, "\n")
+func (s *Solver03) SolveP2(ctx context.Context, r io.Reader) (string, error) {
+	ch1 := make(chan string)
+	ch2 := make(chan string)
 
-	var valid int
-	var converted [3]string
-	for i := 0; i < len(triangles); {
-		sides1 := strings.Fields(triangles[i])
-		sides2 := strings.Fields(triangles[i+1])
-		sides3 := strings.Fields(triangles[i+2])
+	// TODO(Dominik Balaz): Try to write scan function for this
+	rotateLines := func() {
+		defer close(ch2)
+		var rotatedLines [3]string
+		var i int
 
-		converted[0] = fmt.Sprintf("%v %v %v", sides1[0], sides2[0], sides3[0])
-		converted[1] = fmt.Sprintf("%v %v %v", sides1[1], sides2[1], sides3[1])
-		converted[2] = fmt.Sprintf("%v %v %v", sides1[2], sides2[2], sides3[2])
+		for v := range ch1 {
+			sides := strings.Fields(v)
+			for i, v := range sides {
+				rotatedLines[i] += v + " "
+			}
 
-		valid += countTriangles(converted[:])
-
-		i += 3
+			i++
+			if i == 3 {
+				for _, v := range rotatedLines {
+					ch2 <- v
+				}
+				i = 0
+				rotatedLines = [3]string{}
+			}
+		}
 	}
 
-	return strconv.FormatInt(int64(valid), 10)
+	go scan(r, ch1, bufio.ScanLines)
+	go rotateLines()
+	return strconv.FormatInt(int64(countTriangles(ch2)), 10), nil
 }

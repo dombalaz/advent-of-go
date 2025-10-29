@@ -1,6 +1,7 @@
 package y2016_test
 
 import (
+	"context"
 	"strings"
 	"testing"
 
@@ -15,11 +16,11 @@ func TestLcdScreenOperation(t *testing.T) {
 		"rotate column x=1 by 1",
 	}
 	w := "6"
-	solver := y2016.CreateSolver(y2016.Day08)
+	solver := y2016.Solver08{}
 
 	for i := range len(ops) {
 		in := strings.Join(ops[:i+1], "\n")
-		r := solver.SolveP1(in)
+		r, _ := solver.SolveP1(context.Background(), strings.NewReader(in))
 		if r != w {
 			t.Errorf("solver.SolveP1(%v) = %v, want %v", in, r, w)
 		}

@@ -1,6 +1,8 @@
 package y2016_test
 
 import (
+	"context"
+	"strings"
 	"testing"
 
 	"github.com/dombalaz/advent-of-go/y2016"
@@ -29,10 +31,10 @@ func TestIPv7TLSSupport(t *testing.T) {
 		},
 	}
 
-	solver := y2016.CreateSolver(y2016.Day07)
+	solver := y2016.Solver07{}
 	for _, test := range tests {
 		t.Run(test.in, func(t *testing.T) {
-			r := solver.SolveP1(test.in)
+			r, _ := solver.SolveP1(context.Background(), strings.NewReader(test.in))
 			if r != test.w {
 				t.Errorf("solver.SolveP1(%v) = %v, want %v", test.in, r, test.w)
 			}
@@ -63,10 +65,10 @@ func TestIPv7SSLSupport(t *testing.T) {
 		},
 	}
 
-	solver := y2016.CreateSolver(y2016.Day07)
+	solver := y2016.Solver07{}
 	for _, test := range tests {
 		t.Run(test.in, func(t *testing.T) {
-			r := solver.SolveP2(test.in)
+			r, _ := solver.SolveP2(context.Background(), strings.NewReader(test.in))
 			if r != test.w {
 				t.Errorf("solver.SolveP1(%v) = %v, want %v", test.in, r, test.w)
 			}

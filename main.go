@@ -1,12 +1,13 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"strconv"
 	"strings"
 
-	"github.com/dombalaz/advent-of-go/y2016"
+	"github.com/dombalaz/advent-of-go/core"
 )
 
 func main() {
@@ -24,14 +25,16 @@ func main() {
 
 	s := strings.TrimSpace(string(bytes))
 
-	solver := y2016.CreateSolver(y2016.Day(day))
+	solver := core.NewProblemSolver(core.Day(day))
 	if solver == nil {
 		fmt.Printf("failed to create a solver for day: %v", day)
 		os.Exit(1)
 	}
 
-	r1 := solver.SolveP1(s)
-	r2 := solver.SolveP2(s)
+	ctx := context.Background()
+
+	r1, _ := solver.SolveP1(ctx, strings.NewReader(s))
+	r2, _ := solver.SolveP2(ctx, strings.NewReader(s))
 	fmt.Println("========== p1 ==========")
 	fmt.Println(r1)
 	fmt.Println("========== p2 ==========")

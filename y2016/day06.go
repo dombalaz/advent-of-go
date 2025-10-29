@@ -1,63 +1,79 @@
 package y2016
 
 import (
+	"bufio"
+	"context"
+	"io"
 	"math"
-	"strings"
 )
 
 type Solver06 struct{}
 type columnChars []map[rune]int
 
-func countColumnChars(lines []string) columnChars {
-	arrs := make([]map[rune]int, len(lines[0]))
-	for i := range arrs {
-		arrs[i] = make(map[rune]int)
-	}
+func countColumnChars(ch <-chan string) columnChars {
+	init := true
+	var arrs columnChars
 
-	for _, line := range lines {
-		for i, r := range line {
+	for v := range ch {
+		if init {
+			arrs = make([]map[rune]int, len(v))
+			for i := range arrs {
+				arrs[i] = make(map[rune]int)
+			}
+			init = false
+		}
+
+		for i, r := range v {
 			arrs[i][r]++
 		}
 	}
+
 	return arrs
 }
 
-func (s *Solver06) SolveP1(in string) string {
-	lines := strings.Split(in, "\n")
-	chars := countColumnChars(lines)
-
-	var msg string
-	for _, v := range chars {
-		var max int
-		var r rune
-		for k, v := range v {
-			if max < v {
-				r = k
-				max = v
+func (s *Solver06) SolveP1(ctx context.Context, r io.Reader) (string, error) {
+	run := func(chars columnChars) string {
+		var str string
+		for _, v := range chars {
+			var max int
+			var r rune
+			for k, v := range v {
+				if max < v {
+					r = k
+					max = v
+				}
 			}
+			str += string(r)
 		}
-		msg += string(r)
+		return str
 	}
 
-	return msg
+	return s.solve(ctx, r, run)
 }
 
-func (s *Solver06) SolveP2(in string) string {
-	lines := strings.Split(in, "\n")
-	chars := countColumnChars(lines)
-
-	var msg string
-	for _, v := range chars {
-		min := math.MaxInt
-		var r rune
-		for k, v := range v {
-			if v < min {
-				r = k
-				min = v
+func (s *Solver06) SolveP2(ctx context.Context, r io.Reader) (string, error) {
+	run := func(chars columnChars) string {
+		var str string
+		for _, v := range chars {
+			min := math.MaxInt
+			var r rune
+			for k, v := range v {
+				if v < min {
+					r = k
+					min = v
+				}
 			}
+			str += string(r)
 		}
-		msg += string(r)
+		return str
 	}
 
-	return msg
+	return s.solve(ctx, r, run)
+}
+
+func (s *Solver06) solve(ctx context.Context, r io.Reader, run func(columnChars) string) (string, error) {
+	ch := make(chan string)
+	go scan(r, ch, bufio.ScanLines)
+	chars := countColumnChars(ch)
+	return run(chars), nil
 }

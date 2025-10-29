@@ -1,7 +1,10 @@
 package y2016
 
 import (
+	"bufio"
 	"bytes"
+	"context"
+	"io"
 	"slices"
 	"strconv"
 	"strings"
@@ -11,41 +14,49 @@ import (
 
 type Solver04 struct{}
 
-func (s *Solver04) SolveP1(in string) string {
-	l := strings.Split(in, "\n")
-	var sum int
-
-	for _, v := range l {
-		r := parseRoom(v)
-		var chars []rune
-		str := r.letters
-		for range 5 {
-			char := mostFreqRune(str)
-			str = removeRune(str, char)
-			chars = append(chars, char)
+func (s *Solver04) SolveP1(ctx context.Context, r io.Reader) (string, error) {
+	ch := make(chan string)
+	process := func(ch <-chan string) int64 {
+		var sum int
+		for v := range ch {
+			r := parseRoom(v)
+			var chars []rune
+			str := r.letters
+			for range 5 {
+				char := mostFreqRune(str)
+				str = removeRune(str, char)
+				chars = append(chars, char)
+			}
+			if r.checksum == string(chars) {
+				sum += r.id
+			}
 		}
-		if r.checksum == string(chars) {
-			sum += r.id
-		}
+		return int64(sum)
 	}
 
-	return strconv.FormatInt(int64(sum), 10)
+	go scan(r, ch, bufio.ScanLines)
+	return strconv.FormatInt(process(ch), 10), nil
 }
 
-func (s *Solver04) SolveP2(in string) string {
-	l := strings.Split(in, "\n")
-	res := ""
-	for _, v := range l {
-		r := parseRoom(v)
-		var buf bytes.Buffer
-		writer, _ := caesar.NewWriter(&buf, r.id)
-		writer.Write([]byte(r.letters))
-		if strings.HasPrefix(buf.String(), "north") {
-			res = strconv.FormatInt(int64(r.id), 10)
-			break
+func (s *Solver04) SolveP2(ctx context.Context, r io.Reader) (string, error) {
+	ch := make(chan string)
+	process := func(ch <-chan string) string {
+		var str string
+		for v := range ch {
+			r := parseRoom(v)
+			var buf bytes.Buffer
+			writer, _ := caesar.NewWriter(&buf, r.id)
+			writer.Write([]byte(r.letters))
+			if strings.HasPrefix(buf.String(), "north") {
+				str = strconv.FormatInt(int64(r.id), 10)
+				break
+			}
 		}
+		return str
 	}
-	return res
+
+	go scan(r, ch, bufio.ScanLines)
+	return process(ch), nil
 }
 
 type room struct {

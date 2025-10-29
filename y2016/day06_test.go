@@ -1,6 +1,8 @@
 package y2016_test
 
 import (
+	"context"
+	"strings"
 	"testing"
 
 	"github.com/dombalaz/advent-of-go/y2016"
@@ -24,8 +26,8 @@ vrdear
 dvrsen
 enarar`
 
-	solver := y2016.CreateSolver(y2016.Day06)
-	r := solver.SolveP1(in)
+	solver := y2016.Solver06{}
+	r, _ := solver.SolveP1(context.Background(), strings.NewReader(in))
 	w := "easter"
 	if r != w {
 		t.Errorf("solver.SolveP1(%v) = %v, want %v", in, r, w)
@@ -50,8 +52,8 @@ vrdear
 dvrsen
 enarar`
 
-	solver := y2016.CreateSolver(y2016.Day06)
-	r := solver.SolveP2(in)
+	solver := y2016.Solver06{}
+	r, _ := solver.SolveP2(context.Background(), strings.NewReader(in))
 	w := "advent"
 	if r != w {
 		t.Errorf("solver.SolveP2(%v) = %v, want %v", in, r, w)

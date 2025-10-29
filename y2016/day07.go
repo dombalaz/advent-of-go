@@ -1,6 +1,9 @@
 package y2016
 
 import (
+	"bufio"
+	"context"
+	"io"
 	"strconv"
 	"strings"
 )
@@ -96,24 +99,36 @@ func supportsSSL(s string) bool {
 	return false
 }
 
-func (s *Solver07) SolveP1(in string) string {
-	lines := strings.Split(in, "\n")
-	var c int64
-	for _, v := range lines {
-		if supportsABBA(v) {
-			c++
+func (s *Solver07) SolveP1(ctx context.Context, r io.Reader) (string, error) {
+	ch := make(chan string)
+	go scan(r, ch, bufio.ScanLines)
+
+	run := func(ch <-chan string) int64 {
+		var c int64
+		for v := range ch {
+			if supportsABBA(v) {
+				c++
+			}
 		}
+		return c
 	}
-	return strconv.FormatInt(c, 10)
+
+	return strconv.FormatInt(run(ch), 10), nil
 }
 
-func (s *Solver07) SolveP2(in string) string {
-	lines := strings.Split(in, "\n")
-	var c int64
-	for _, v := range lines {
-		if supportsSSL(v) {
-			c++
+func (s *Solver07) SolveP2(ctx context.Context, r io.Reader) (string, error) {
+	ch := make(chan string)
+	go scan(r, ch, bufio.ScanLines)
+
+	run := func(ch <-chan string) int64 {
+		var c int64
+		for v := range ch {
+			if supportsSSL(v) {
+				c++
+			}
 		}
+		return c
 	}
-	return strconv.FormatInt(c, 10)
+
+	return strconv.FormatInt(run(ch), 10), nil
 }

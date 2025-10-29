@@ -1,7 +1,9 @@
 package y2016
 
 import (
-	"strings"
+	"bufio"
+	"context"
+	"io"
 
 	"github.com/dombalaz/advent-of-go/grid"
 )
@@ -72,33 +74,25 @@ func (kp *Keypad) moveRight() {
 	kp.cx += 1
 }
 
-func prepareInput2(in string) []string {
-	return strings.Split(in, "\n")
-}
-
 type Solver02 struct{}
 
-func (s *Solver02) SolveP1(in string) string {
-	directions := prepareInput2(in)
-	var r string
-	kp := NewKeypad()
-	for _, line := range directions {
-		for _, v := range line {
-			kp.move(v)
-		}
-		r += string(kp.g.At(kp.cx, kp.cy))
-	}
-	return r
+func (s *Solver02) SolveP1(ctx context.Context, r io.Reader) (string, error) {
+	return s.solve(ctx, r, NewKeypad())
 }
-func (s *Solver02) SolveP2(in string) string {
-	directions := prepareInput2(in)
-	var r string
-	kp := NewHexKeypad()
-	for _, line := range directions {
+
+func (s *Solver02) SolveP2(ctx context.Context, r io.Reader) (string, error) {
+	return s.solve(ctx, r, NewHexKeypad())
+}
+
+func (s *Solver02) solve(ctx context.Context, r io.Reader, kp Keypad) (string, error) {
+	ch := make(chan string)
+	go scan(r, ch, bufio.ScanLines)
+	var result string
+	for line := range ch {
 		for _, v := range line {
 			kp.move(v)
 		}
-		r += string(kp.g.At(kp.cx, kp.cy))
+		result += string(kp.g.At(kp.cx, kp.cy))
 	}
-	return r
+	return result, nil
 }
