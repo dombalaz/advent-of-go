@@ -32,6 +32,8 @@ func NewProblemSolver(day Day) ProblemSolver {
 		return &y2016.Solver07{}
 	case Day08:
 		return &y2016.Solver08{}
+	case Day09:
+		return &y2016.Solver09{}
 	}
 	return nil
 }
@@ -45,4 +47,5 @@ const (
 	Day06
 	Day07
 	Day08
+	Day09
 )
