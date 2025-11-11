@@ -86,7 +86,10 @@ func (s *Solver02) SolveP2(ctx context.Context, r io.Reader) (string, error) {
 
 func (s *Solver02) solve(ctx context.Context, r io.Reader, kp Keypad) (string, error) {
 	ch := make(chan string)
-	go scan(r, ch, bufio.ScanLines)
+	var err error
+	go func() {
+		err = scan(r, ch, bufio.ScanLines)
+	}()
 	var result string
 	for line := range ch {
 		for _, v := range line {
@@ -94,5 +97,5 @@ func (s *Solver02) solve(ctx context.Context, r io.Reader, kp Keypad) (string, e
 		}
 		result += string(kp.g.At(kp.cx, kp.cy))
 	}
-	return result, nil
+	return result, err
 }

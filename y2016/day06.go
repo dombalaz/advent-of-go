@@ -73,7 +73,10 @@ func (s *Solver06) SolveP2(ctx context.Context, r io.Reader) (string, error) {
 
 func (s *Solver06) solve(ctx context.Context, r io.Reader, run func(columnChars) string) (string, error) {
 	ch := make(chan string)
-	go scan(r, ch, bufio.ScanLines)
+	var err error
+	go func() {
+		err = scan(r, ch, bufio.ScanLines)
+	}()
 	chars := countColumnChars(ch)
-	return run(chars), nil
+	return run(chars), err
 }

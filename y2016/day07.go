@@ -101,7 +101,10 @@ func supportsSSL(s string) bool {
 
 func (s *Solver07) SolveP1(ctx context.Context, r io.Reader) (string, error) {
 	ch := make(chan string)
-	go scan(r, ch, bufio.ScanLines)
+	var err error
+	go func() {
+		err = scan(r, ch, bufio.ScanLines)
+	}()
 
 	run := func(ch <-chan string) int64 {
 		var c int64
@@ -113,12 +116,15 @@ func (s *Solver07) SolveP1(ctx context.Context, r io.Reader) (string, error) {
 		return c
 	}
 
-	return strconv.FormatInt(run(ch), 10), nil
+	return strconv.FormatInt(run(ch), 10), err
 }
 
 func (s *Solver07) SolveP2(ctx context.Context, r io.Reader) (string, error) {
 	ch := make(chan string)
-	go scan(r, ch, bufio.ScanLines)
+	var err error
+	go func() {
+		err = scan(r, ch, bufio.ScanLines)
+	}()
 
 	run := func(ch <-chan string) int64 {
 		var c int64
@@ -130,5 +136,5 @@ func (s *Solver07) SolveP2(ctx context.Context, r io.Reader) (string, error) {
 		return c
 	}
 
-	return strconv.FormatInt(run(ch), 10), nil
+	return strconv.FormatInt(run(ch), 10), err
 }

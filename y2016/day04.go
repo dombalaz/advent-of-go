@@ -34,8 +34,11 @@ func (s *Solver04) SolveP1(ctx context.Context, r io.Reader) (string, error) {
 		return int64(sum)
 	}
 
-	go scan(r, ch, bufio.ScanLines)
-	return strconv.FormatInt(process(ch), 10), nil
+	var err error
+	go func() {
+		err = scan(r, ch, bufio.ScanLines)
+	}()
+	return strconv.FormatInt(process(ch), 10), err
 }
 
 func (s *Solver04) SolveP2(ctx context.Context, r io.Reader) (string, error) {
@@ -46,7 +49,9 @@ func (s *Solver04) SolveP2(ctx context.Context, r io.Reader) (string, error) {
 			r := parseRoom(v)
 			var buf bytes.Buffer
 			writer, _ := caesar.NewWriter(&buf, r.id)
-			writer.Write([]byte(r.letters))
+			if _, err := writer.Write([]byte(r.letters)); err != nil {
+				return ""
+			}
 			if strings.HasPrefix(buf.String(), "north") {
 				str = strconv.FormatInt(int64(r.id), 10)
 				break
@@ -55,8 +60,11 @@ func (s *Solver04) SolveP2(ctx context.Context, r io.Reader) (string, error) {
 		return str
 	}
 
-	go scan(r, ch, bufio.ScanLines)
-	return process(ch), nil
+	var err error
+	go func() {
+		err = scan(r, ch, bufio.ScanLines)
+	}()
+	return process(ch), err
 }
 
 type room struct {

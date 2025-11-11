@@ -35,8 +35,11 @@ func countTriangles(ch <-chan string) int {
 
 func (s *Solver03) SolveP1(ctx context.Context, r io.Reader) (string, error) {
 	ch := make(chan string)
-	go scan(r, ch, bufio.ScanLines)
-	return strconv.FormatInt(int64(countTriangles(ch)), 10), nil
+	var err error
+	go func() {
+		err = scan(r, ch, bufio.ScanLines)
+	}()
+	return strconv.FormatInt(int64(countTriangles(ch)), 10), err
 }
 
 func (s *Solver03) SolveP2(ctx context.Context, r io.Reader) (string, error) {
@@ -66,7 +69,10 @@ func (s *Solver03) SolveP2(ctx context.Context, r io.Reader) (string, error) {
 		}
 	}
 
-	go scan(r, ch1, bufio.ScanLines)
+	var err error
+	go func() {
+		err = scan(r, ch1, bufio.ScanLines)
+	}()
 	go rotateLines()
-	return strconv.FormatInt(int64(countTriangles(ch2)), 10), nil
+	return strconv.FormatInt(int64(countTriangles(ch2)), 10), err
 }

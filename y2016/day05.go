@@ -14,7 +14,7 @@ type Solver05 struct{}
 func (s *Solver05) SolveP1(ctx context.Context, r io.Reader) (string, error) {
 	b, err := io.ReadAll(r)
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 
 	run := func(str string) string {
@@ -38,7 +38,7 @@ func (s *Solver05) SolveP1(ctx context.Context, r io.Reader) (string, error) {
 func (s *Solver05) SolveP2(ctx context.Context, r io.Reader) (string, error) {
 	b, err := io.ReadAll(r)
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 
 	run := func(str string) string {

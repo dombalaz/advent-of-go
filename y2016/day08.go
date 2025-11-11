@@ -29,7 +29,10 @@ func (s *Solver08) SolveP2(ctx context.Context, r io.Reader) (string, error) {
 
 func (s *Solver08) solve(ctx context.Context, r io.Reader, f func(lcd *screen.LCD) (string, error)) (string, error) {
 	ch := make(chan string)
-	go scan(r, ch, bufio.ScanLines)
+	var scanErr error
+	go func() {
+		scanErr = scan(r, ch, bufio.ScanLines)
+	}()
 
 	run := func(ch <-chan string) (screen.LCD, error) {
 		lcd := screen.New(50, 6)
@@ -44,6 +47,9 @@ func (s *Solver08) solve(ctx context.Context, r io.Reader, f func(lcd *screen.LC
 	lcd, err := run(ch)
 	if err != nil {
 		return "", err
+	}
+	if scanErr != nil {
+		return "", scanErr
 	}
 
 	return f(&lcd)

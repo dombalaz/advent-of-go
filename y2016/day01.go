@@ -114,14 +114,20 @@ func (s *Solver01) solve(ch <-chan string) (string, string) {
 
 func (s *Solver01) SolveP1(ctx context.Context, r io.Reader) (string, error) {
 	ch := make(chan string)
-	go scan(r, ch, scanCSV)
+	var err error
+	go func() {
+		err = scan(r, ch, scanCSV)
+	}()
 	result, _ := s.solve(ch)
-	return result, nil
+	return result, err
 }
 
 func (s *Solver01) SolveP2(ctx context.Context, r io.Reader) (string, error) {
 	ch := make(chan string)
-	go scan(r, ch, scanCSV)
+	var err error
+	go func() {
+		err = scan(r, ch, scanCSV)
+	}()
 	_, result := s.solve(ch)
-	return result, nil
+	return result, err
 }

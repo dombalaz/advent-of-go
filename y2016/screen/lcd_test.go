@@ -54,7 +54,9 @@ func TestLcdScreenOperation(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.op, func(t *testing.T) {
-			lcd.Do(test.op)
+			if err := lcd.Do(test.op); err != nil {
+				t.Errorf("lcd.Do(%v) = %v, want nil", test.op, err)
+			}
 
 			cLights := lcd.CountLit()
 			if cLights != wLights {
