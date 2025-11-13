@@ -33,8 +33,16 @@ func main() {
 
 	ctx := context.Background()
 
-	r1, _ := solver.SolveP1(ctx, strings.NewReader(s))
-	r2, _ := solver.SolveP2(ctx, strings.NewReader(s))
+	r1, err := solver.SolveP1(ctx, strings.NewReader(s))
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	r2, err := solver.SolveP2(ctx, strings.NewReader(s))
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	fmt.Println("========== p1 ==========")
 	fmt.Println(r1)
 	fmt.Println("========== p2 ==========")

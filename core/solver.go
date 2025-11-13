@@ -5,6 +5,7 @@ import (
 	"io"
 
 	"github.com/dombalaz/advent-of-go/y2016"
+	"github.com/dombalaz/advent-of-go/y2016/day10"
 )
 
 type Day int
@@ -34,6 +35,8 @@ func NewProblemSolver(day Day) ProblemSolver {
 		return &y2016.Solver08{}
 	case Day09:
 		return &y2016.Solver09{}
+	case Day10:
+		return &day10.Solver{}
 	}
 	return nil
 }
@@ -48,4 +51,5 @@ const (
 	Day07
 	Day08
 	Day09
+	Day10
 )
